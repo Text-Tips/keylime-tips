@@ -1,0 +1,33 @@
+Packages required to run keylime tests:
+---------------------------------------
+git clone https://github.com/keylime/rust-keylime /var/tmp/rust-keylime_sources
+dnf install -y cargo tpm2-tss-devel rust-clang-sys-devel clang16-devel kernel-headers clang16-libs kernel-headers clang-libs cmake llvm-devel llvm-devel clang16-devel rust-clang-sys+clang_17_0-devel zeromq-devel
+# Execution with code coverage:
+$ KEYLIME_RUST_CODE_COVERAGE=1 ./test.sh 
+
+Format check in rust-keylime:
+-----------------------------
+cargo fmt --all --check
+
+Modify vendor for rust based package:
+-------------------------------------
+Modify the patch to change versions in Cargo.toml and Cargo.lock
+Download the tarball (use spectool -gf keylime-agent-rust.spec), unzip it and enter the directory with a cd
+Apply the patch (use patch -p1 < ../rust-keylime-metadata.patch)
+Generate the provider, eliminating everything so you can't ship (command line)
+Generate tarball as provider (I use tar provider jcf rust-keylime-0.2.7-vendor.tar.xz, obviously adjusting to version)
+Change the tarball to root and load it as source with Fedpkg or centpkg new-sources
+# Vendor generator:
+cargo vendor-filterer --all-features --platform x86_64-unknown-linux-gnu --platform powerpc64le-unknown-linux-gnu --platform aarch64-unknown-linux-gnu --platform i686-unknown-linux-gnu --platform s390x-unknown-linux-gnu --exclude-crate-path "libloading#tests"
+# using this thing: cargo-vendor-filterer : https://github.com/coreos/cargo-vendor-filterer
+
+Github issue templates:
+-----------------------
+# Example of some templates included:
+https://github.com/keylime/keylime/pull/1751/files
+
+Execution of coverage tests through Cargo tarpaulin (Rust):
+-----------------------------------------------------------
+cargo tarpaulin
+cargo tarpaulin --out Html
+cargo tarpaulin --out Json
