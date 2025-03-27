@@ -31,3 +31,7 @@ Execution of coverage tests through Cargo tarpaulin (Rust):
 cargo tarpaulin
 cargo tarpaulin --out Html
 cargo tarpaulin --out Json
+
+Generation default configuration for verifier:
+----------------------------------------------
+mkdir config && PYTHONPATH=. python3 keylime/cmd/convert_config.py --templates templates/  --out config --default
