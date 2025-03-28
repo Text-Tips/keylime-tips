@@ -35,3 +35,8 @@ cargo tarpaulin --out Json
 Generation default configuration for verifier:
 ----------------------------------------------
 mkdir config && PYTHONPATH=. python3 keylime/cmd/convert_config.py --templates templates/  --out config --default
+
+How tests are executed on Keylime agent at CI phase:
+----------------------------------------------------
+cargo tarpaulin --verbose --target-dir target/tarpaulin --workspace --exclude-files 'target/*' --ignore-panics --ignore-tests --out Xml --out Html --all-features -- --test-threads=1
+cargo test --features testing  -p keylime_push_model_agent --bin keylime_push_model_agent -- --nocapture
