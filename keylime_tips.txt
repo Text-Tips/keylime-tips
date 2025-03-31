@@ -40,3 +40,17 @@ How tests are executed on Keylime agent at CI phase:
 ----------------------------------------------------
 cargo tarpaulin --verbose --target-dir target/tarpaulin --workspace --exclude-files 'target/*' --ignore-panics --ignore-tests --out Xml --out Html --all-features -- --test-threads=1
 cargo test --features testing  -p keylime_push_model_agent --bin keylime_push_model_agent -- --nocapture
+
+Verifier certificate path:
+--------------------------
+/var/lib/keylime/cv_ca
+# In particular the ones to use to "fake" agent:
+client-cert.crt
+client-private.pem
+client-public.pem
+
+Curl insecure mode:
+-------------------
+curl --verbose -k https://127.0.0.1:8881/agents/1234/attestations
+# More information on certificate setup:
+https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/security_hardening/assembly_ensuring-system-integrity-with-keylime_security-hardening#con_how-keylime-works_assembly_ensuring-system-integrity-with-keylime
