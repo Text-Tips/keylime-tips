@@ -54,3 +54,7 @@ Curl insecure mode:
 curl --verbose -k https://127.0.0.1:8881/agents/1234/attestations
 # More information on certificate setup:
 https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/security_hardening/assembly_ensuring-system-integrity-with-keylime_security-hardening#con_how-keylime-works_assembly_ensuring-system-integrity-with-keylime
+
+Add a particular package to a particular binary:
+----------------------------------------------------
+cargo add zeroize --package keylime_push_model_agent
