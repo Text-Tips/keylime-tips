@@ -58,3 +58,8 @@ https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/securit
 Add a particular package to a particular binary:
 ----------------------------------------------------
 cargo add zeroize --package keylime_push_model_agent
+
+Additional way to test a particular test:
+-----------------------------------------
+cargo test structures::evidence_handling::tests::deserialize_evidence_handling_request
+cargo test structures::evidence_handling::tests::deserialize_evidence_handling_request -- --nocapture
