@@ -72,5 +72,7 @@ Update packages through cargo:
 cargo update
 # Update a particular package
 cargo update url
+# Can specify more than one package to update
+cargo update url reqwest
 # Update to a particular version
 cargo update url --precise 2.5.3
