@@ -65,3 +65,12 @@ cargo test structures
 cargo test structures::evidence_handling::tests
 cargo test structures::evidence_handling::tests::deserialize_evidence_handling_request
 cargo test structures::evidence_handling::tests::deserialize_evidence_handling_request -- --nocapture
+
+Update packages through cargo:
+------------------------------
+# Update everything
+cargo update
+# Update a particular package
+cargo update url
+# Update to a particular version
+cargo update url --precise 2.5.3
