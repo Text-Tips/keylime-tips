@@ -61,5 +61,7 @@ cargo add zeroize --package keylime_push_model_agent
 
 Additional way to test a particular test:
 -----------------------------------------
+cargo test structures
+cargo test structures::evidence_handling::tests
 cargo test structures::evidence_handling::tests::deserialize_evidence_handling_request
 cargo test structures::evidence_handling::tests::deserialize_evidence_handling_request -- --nocapture
