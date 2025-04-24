@@ -81,3 +81,7 @@ cargo update url
 cargo update url reqwest
 # Update to a particular version
 cargo update url --precise 2.5.3
+
+Retest failed CI GH actions on rust-keylime:
+--------------------------------------------
+/packit retest-failed
