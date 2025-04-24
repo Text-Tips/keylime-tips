@@ -66,6 +66,11 @@ cargo test structures::evidence_handling::tests
 cargo test structures::evidence_handling::tests::deserialize_evidence_handling_request
 cargo test structures::evidence_handling::tests::deserialize_evidence_handling_request -- --nocapture
 
+Execution of tests with extra debugging:
+----------------------------------------
+RUST_BACKTRACE=1 cargo test
+RUST_BACKTRACE=full cargo test
+
 Update packages through cargo:
 ------------------------------
 # Update everything
