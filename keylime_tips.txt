@@ -85,3 +85,7 @@ cargo update url --precise 2.5.3
 Retest failed CI GH actions on rust-keylime:
 --------------------------------------------
 /packit retest-failed
+
+Executing tests for Registrar/Verifier:
+---------------------------------------
+tox -v -e 'mypy'
