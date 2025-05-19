@@ -86,6 +86,10 @@ Retest failed CI GH actions on rust-keylime:
 --------------------------------------------
 /packit retest-failed
 
+How to rebase through dependabot:
+---------------------------------
+@dependabot rebase
+
 Executing tests for Registrar/Verifier:
 ---------------------------------------
 tox -v -e 'mypy'
