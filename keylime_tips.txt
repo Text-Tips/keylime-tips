@@ -44,6 +44,10 @@ git fetch origin pull/1693/head:push-attestation
 git checkout push-attestation
 sudo python3 -m keylime.cmd.verifier
 
+Run Registrar for Push Model:
+-----------------------------
+sudo python3 -m keylime.cmd.registrar
+
 How tests are executed on Keylime agent at CI phase:
 ----------------------------------------------------
 cargo tarpaulin --verbose --target-dir target/tarpaulin --workspace --exclude-files 'target/*' --ignore-panics --ignore-tests --out Xml --out Html --all-features -- --test-threads=1
