@@ -36,6 +36,14 @@ Generation default configuration for verifier:
 ----------------------------------------------
 mkdir config && PYTHONPATH=. python3 keylime/cmd/convert_config.py --templates templates/  --out config --default
 
+Run verifier for Push Model:
+----------------------------
+git clone git@github.com:keylime/keylime.git
+cd keylime
+git fetch origin pull/1693/head:push-attestation
+git checkout push-attestation
+sudo python3 -m keylime.cmd.verifier
+
 How tests are executed on Keylime agent at CI phase:
 ----------------------------------------------------
 cargo tarpaulin --verbose --target-dir target/tarpaulin --workspace --exclude-files 'target/*' --ignore-panics --ignore-tests --out Xml --out Html --all-features -- --test-threads=1
