@@ -3,7 +3,7 @@ Packages required to run keylime tests:
 git clone https://github.com/keylime/rust-keylime /var/tmp/rust-keylime_sources
 dnf install -y cargo tpm2-tss-devel rust-clang-sys-devel clang16-devel kernel-headers clang16-libs kernel-headers clang-libs cmake llvm-devel llvm-devel clang16-devel rust-clang-sys+clang_17_0-devel zeromq-devel
 # Execution with code coverage:
-$ KEYLIME_RUST_CODE_COVERAGE=1 ./test.sh 
+$ KEYLIME_RUST_CODE_COVERAGE=1 ./test.sh
 
 Format check in rust-keylime:
 -----------------------------
@@ -108,4 +108,12 @@ tox -v -e 'mypy'
 
 Check registrations with tenant:
 --------------------------------
-keylime_tenant -c reglist
+sudo keylime_tenant -c reglist
+# It will return something like:
+...
+2025-05-22 14:45:52.890 - keylime.tenant - INFO - Agent list from Registrar (127.0.0.1:8891) retrieved:
+{"uuids": ["b0acd25f-2205-4c37-932d-e8f99a8d39ef"]}
+
+Check registration status for a UID:
+------------------------------------
+sudo keylime_tenant -c regstatus -u b0acd25f-2205-4c37-932d-e8f99a8d39ef
