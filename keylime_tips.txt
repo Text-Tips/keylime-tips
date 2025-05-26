@@ -117,3 +117,11 @@ sudo keylime_tenant -c reglist
 Check registration status for a UID:
 ------------------------------------
 sudo keylime_tenant -c regstatus -u b0acd25f-2205-4c37-932d-e8f99a8d39ef
+
+Install packages for registrar:
+-------------------------------
+alembic tornado pyasn1 pyasn1-modules
+#Ubuntu:
+apt install -y alembic python3-tornado python3-pyasn1 python3-pyasn1-modules python3-lark
+#Fedora:
+dnf install -y alembic python3-tornado python3-pyasn1 python3-pyasn1-modules python3-lark
