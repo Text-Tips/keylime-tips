@@ -127,7 +127,7 @@ alembic tornado pyasn1 pyasn1-modules
 #Ubuntu:
 apt install -y alembic python3-tornado python3-pyasn1 python3-pyasn1-modules python3-lark
 #Fedora:
-dnf install -y alembic python3-tornado python3-pyasn1 python3-pyasn1-modules python3-lark
+dnf install -y python3-alembic python3-gpg python3-tornado python3-pyasn1 python3-pyasn1-modules python3-lark
 
 Install packages for agent build:
 ---------------------------------
@@ -135,3 +135,17 @@ Install packages for agent build:
 apt install -y libclang-dev libssl-dev libtss2-dev pkg-config libzmq3-dev
 #Fedora:
 dnf install -y openssl-devel tpm2-tss-devel systemd-devel util-linux-core zeromq-devel
+
+Default directories to retrieve IMA/UEFI logs:
+----------------------------------------------
+# For IMA log:
+/sys/kernel/security/ima/
+# For UEFI event log:
+/sys/kernel/security/tpm0/
+
+Default files to retrieve IMA/UEFI logs:
+----------------------------------------------
+# For IMA log:
+/sys/kernel/security/ima/ascii_runtime_measurements
+# For UEFI event log:
+/sys/kernel/security/tpm0/binary_bios_measurements
