@@ -154,3 +154,8 @@ Information regarding Capabilities Negotiation:
 -----------------------------------------------
 The key_class should be asymmetric , key_algorithm rsa, the key_size should match the AK size (probably 2048), the server_identifier should be ak , the local_identifier shopuld be the TPM name (which is a hash over the public portion of the AK, probably we have the calculation implemented somewhere), and the public should be the public portion of the key.
 It makes sense to have more than one AK, multiple AK can be generated under the same EK. The EK is unique.
+
+Verifier configuration for Push Mode:
+-------------------------------------
+mode = push
+challenge_lifetime = 1800
