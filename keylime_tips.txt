@@ -167,3 +167,7 @@ keylime_tenant -c add --cert default -u <UUID>
 # Alternatively, a configuration snippet at /etc/keylime/tenant.conf.d/ can be dropped or modify /etc/keylime/tenant.conf directly,
 # IMPORTANT: If you are using swtpm, most probably you will have to set the require_ek_cert = False in the tenant config
 #            The alternative would be to add your swtpm CA certificate to the /var/lib/keylime/tpm_cert_store
+
+Remove quote in Tenant:
+-----------------------
+For Push Mode to work appropriately, tenant can not quote agent (as server is not available any more in Agent). To avoid it, comment 'do_quote' calls in tenant.py
