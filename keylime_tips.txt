@@ -159,3 +159,11 @@ Verifier configuration for Push Mode:
 -------------------------------------
 mode = push
 challenge_lifetime = 1800
+
+Agent registration in Verifier:
+-------------------------------
+keylime_tenant -c add --cert default -u <UUID> -t <AGENT_IP> -v <VERIFIER_IP>
+keylime_tenant -c add --cert default -u <UUID>
+# Alternatively, a configuration snippet at /etc/keylime/tenant.conf.d/ can be dropped or modify /etc/keylime/tenant.conf directly,
+# IMPORTANT: If you are using swtpm, most probably you will have to set the require_ek_cert = False in the tenant config
+#            The alternative would be to add your swtpm CA certificate to the /var/lib/keylime/tpm_cert_store
