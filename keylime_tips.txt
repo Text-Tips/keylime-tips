@@ -173,3 +173,7 @@ Remove quote in Tenant:
 For Push Mode to work appropriately, tenant can not quote agent (as server is not available any more in Agent). To avoid it, comment 'do_quote' calls in tenant.py
 Apart from that, next patch needs to be applied:
 keylime_push_model_tenant_patch_00.txt
+
+Check algorithms with tpm2-tools:
+---------------------------------
+sudo tpm2_getcap algorithms
