@@ -177,3 +177,7 @@ keylime_push_model_tenant_patch_00.txt
 Check algorithms with tpm2-tools:
 ---------------------------------
 sudo tpm2_getcap algorithms
+
+Header to allow unwrap() on tests:
+----------------------------------
+//#[allow_ci]
