@@ -168,6 +168,12 @@ keylime_tenant -c add --cert default -u <UUID>
 # IMPORTANT: If you are using swtpm, most probably you will have to set the require_ek_cert = False in the tenant config
 #            The alternative would be to add your swtpm CA certificate to the /var/lib/keylime/tpm_cert_store
 
+Agent removal from Verifier:
+----------------------------
+keylime_tenant -c delete --cert default -u <UUID> -t <AGENT_IP> -v <VERIFIER_IP>
+# For localhost:
+keylime_tenant -c delete --cert default -u <UUID>
+
 Remove quote in Tenant:
 -----------------------
 For Push Mode to work appropriately, tenant can not quote agent (as server is not available any more in Agent). To avoid it, comment 'do_quote' calls in tenant.py
