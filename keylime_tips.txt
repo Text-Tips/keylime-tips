@@ -191,3 +191,10 @@ sudo tpm2_getcap algorithms
 Header to allow unwrap() on tests:
 ----------------------------------
 //#[allow_ci]
+
+Clarification regarding keys (AKs vs EKs):
+------------------------------------------
+The properties of an AK (its algorithm, size, usage rules, etc.) are defined in its own creation template when it is generated. The EK parent only serves to protect the new key. Therefore, under a single EK (e.g., an RSA 2048 key), you can create a diverse set of AKs, such as:
+* An RSA 2048 AK using the RSASSA signing scheme.
+* An RSA 3072 AK using the RSAPSS signing scheme.
+* An Elliptic Curve (ECC) AK using the NIST P-256 curve and ECDSA scheme.
