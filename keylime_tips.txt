@@ -198,3 +198,9 @@ The properties of an AK (its algorithm, size, usage rules, etc.) are defined in 
 * An RSA 2048 AK using the RSASSA signing scheme.
 * An RSA 3072 AK using the RSAPSS signing scheme.
 * An Elliptic Curve (ECC) AK using the NIST P-256 curve and ECDSA scheme.
+
+Comments regarding AK generation:
+---------------------------------
+* We should clarify what to do with AKs with HPE guys
+* We should send, at least, one RSA and one ECC
+* Ideally, we should only have one created, then, we should persist it to a file, then flush it, to avoid exhausting TPM2 chipset
