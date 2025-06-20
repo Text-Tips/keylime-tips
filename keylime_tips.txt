@@ -201,6 +201,6 @@ The properties of an AK (its algorithm, size, usage rules, etc.) are defined in 
 
 Comments regarding AK generation:
 ---------------------------------
-* We should clarify what to do with AKs with HPE guys
-* We should send, at least, one RSA and one ECC
 * Ideally, we should only have one created, then, we should persist it to a file, then flush it, to avoid exhausting TPM2 chipset
+* Creating more than one AK and send it to the verifier is not "an easy thing". It involves having to register all the keys in the registrar as well.
+* For that reason, for push model MVP, we will send an array, but only containing an AK (whose parameters are taken from configuration)
