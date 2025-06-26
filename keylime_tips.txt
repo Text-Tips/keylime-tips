@@ -177,6 +177,8 @@ keylime_tenant -c delete --cert default -u <UUID>
 Specify appropriate version through keylime_tenant:
 ---------------------------------------------------
 keylime_tenant -c add --cert default -u <UUID> --supported-version 3.0
+keylime_tenant -c add --cert default -u d432fbb3-d2f1-4a97-9ef7-75bd81c00000 --supported-version 3.0
+keylime_tenant -c add --cert default -u d432fbb3-d2f1-4a97-9ef7-75bd81c00000 --supported-version 3.0 --push-model
 
 Remove quote in Tenant:
 -----------------------
