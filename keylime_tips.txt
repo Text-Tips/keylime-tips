@@ -213,4 +213,5 @@ The AK persistence is implemented already, in the `AgentData::store()`
 
 Clean Verifier database:
 ------------------------
-Default file is: /var/lib/keylime/cv_data.sqlite
+# Delete default file:
+rm /var/lib/keylime/cv_data.sqlite
