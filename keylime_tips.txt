@@ -216,6 +216,40 @@ Clean Verifier database:
 # Delete default file:
 rm /var/lib/keylime/cv_data.sqlite
 
+Fix for Verifier "tpm_mask" issue:
+--------------------------------
+--- a/keylime/cloud_verifier_tornado.py
++++ b/keylime/cloud_verifier_tornado.py
+@@ -530,13 +530,26 @@ class AgentsHandler(BaseHandler):
+                     logger.warning("POST returning 400 response. Expected non zero content length.")
+                 else:
+                     json_body = json.loads(self.request.body)
++                    # Normalize tpm_policy to ensure it is a dictionary
++                    tpm_policy = json_body.get("tpm_policy")
++                    if isinstance(tpm_policy, str):
++                        try:
++                            tpm_policy = json.loads(tpm_policy)
++                        except ValueError as e:
++                            web_util.echo_json_response(
++                               self.req_handler, 400, f"TPM policy is not a valid JSON object string: {e}"
++                            )
++                            logger.warning("TPM policy provided as a string could not be decoded.")
++                            return
++
++
+                     agent_data = {
+                         "v": json_body.get("v", None),
+                         "ip": json_body["cloudagent_ip"],
+                         "port": int(json_body["cloudagent_port"]),
+                         "operational_state": states.START,
+                         "public_key": "",
+-                        "tpm_policy": json_body["tpm_policy"],
++                        "tpm_policy": tpm_policy if tpm_policy else {},
+                         "meta_data": json_body["metadata"],
+                         "ima_sign_verification_keys": json_body["ima_sign_verification_keys"],
+                         "revocation_key": json_body["revocation_key"],
+
+
 Errors with Evidence_Collected/Evidence_Handling:
 -------------------------------------------------
 The code which produces the list of errors incorrectly reports an issue with "evidence_collected" when it should be "evidence_supported". See attached diff of attestation.py
