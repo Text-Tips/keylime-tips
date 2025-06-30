@@ -215,3 +215,24 @@ Clean Verifier database:
 ------------------------
 # Delete default file:
 rm /var/lib/keylime/cv_data.sqlite
+
+Errors with Evidence_Collected/Evidence_Handling:
+-------------------------------------------------
+The code which produces the list of errors incorrectly reports an issue with "evidence_collected" when it should be "evidence_supported". See attached diff of attestation.py
+As previously mentioned, the verifier does not currently expect the structure to be wrapped inside a data object. As a temporary fix, in push_attestation_controller.py, change the calls to receive_capabilities(params) (line ~208) and receive_evidence(params) (line ~262) and replace params with params.get("data", {})
+
+attestation.py:
+208 -            if self.stage == "evaluating_evidence"
+208 +            if self.stage == "awaiting_evidence"
+
+Further to previous changes, you will also probably want to change how data is returned from the verifier.Temporarily update the end of the create method in push_attestation_controller.py:
+# Replace:
+# self.respond(201, "Success", new_attestation.render_evidence_requested())
+# With:
+self.send_response(status_code=201, body={"data": new_attestation.render_evidence_requested()})
+
+Also update the end of the update_latest method:
+# Replace:
+# self.respond(202, "Success", attestation.render_evidence_acknowledged())
+# With:
+self.send_response(status_code=202, body={"data": attestation.render_evidence_acknowledged()})
