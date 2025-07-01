@@ -270,3 +270,8 @@ Also update the end of the update_latest method:
 # self.respond(202, "Success", attestation.render_evidence_acknowledged())
 # With:
 self.send_response(status_code=202, body={"data": attestation.render_evidence_acknowledged()})
+
+Check where Verifier is running:
+--------------------------------
+$ sudo ss -lntp | grep 8881
+LISTEN 0      128        127.0.0.1:8881       0.0.0.0:*    users:(("python3",pid=236775,fd=4))
