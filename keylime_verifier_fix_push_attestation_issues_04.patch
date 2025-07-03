@@ -1,0 +1,234 @@
+diff --git a/keylime/cloud_verifier_tornado.py b/keylime/cloud_verifier_tornado.py
+index b4109c4..8d627b1 100644
+--- a/keylime/cloud_verifier_tornado.py
++++ b/keylime/cloud_verifier_tornado.py
+@@ -530,13 +530,26 @@ class AgentsHandler(BaseHandler):
+                     logger.warning("POST returning 400 response. Expected non zero content length.")
+                 else:
+                     json_body = json.loads(self.request.body)
++                    # Normalize tpm_policy to ensure it is a dictionary
++                    tpm_policy = json_body.get("tpm_policy")
++                    if isinstance(tpm_policy, str):
++                        try:
++                            tpm_policy = json.loads(tpm_policy)
++                        except ValueError as e:
++                            web_util.echo_json_response(
++                               self.req_handler, 400, f"TPM policy is not a valid JSON object string: {e}"
++                            )
++                            logger.warning("TPM policy provided as a string could not be decoded.")
++                            return
++
++
+                     agent_data = {
+                         "v": json_body.get("v", None),
+                         "ip": json_body["cloudagent_ip"],
+                         "port": int(json_body["cloudagent_port"]),
+                         "operational_state": states.START,
+                         "public_key": "",
+-                        "tpm_policy": json_body["tpm_policy"],
++                        "tpm_policy": tpm_policy if tpm_policy else {},
+                         "meta_data": json_body["metadata"],
+                         "ima_sign_verification_keys": json_body["ima_sign_verification_keys"],
+                         "revocation_key": json_body["revocation_key"],
+diff --git a/keylime/models/base/basic_model.py b/keylime/models/base/basic_model.py
+index a662bd1..50c2fa1 100644
+--- a/keylime/models/base/basic_model.py
++++ b/keylime/models/base/basic_model.py
+@@ -254,11 +254,18 @@ class BasicModel(ABC, metaclass=BasicModelMeta):
+                 record_set = association.get_record_set(self)
+                 value = [value] if not isinstance(value, list) else value
+ 
+-                for item in value:
+-                    record_set.add(association.other_model(item))
++                for item_data in value:
++                    if not isinstance(item_data, dict):
++                        raise TypeError
++                    record = self._new_associated_record(association, item_data)
++                    record_set.add(record)
+ 
+         self._force_commit_changes()
+ 
++    def _new_associated_record(self, association, item_data):
++        """Hook para que las subclases elijan un modelo polimórfico."""
++        return association.other_model(item_data)
++
+     def __setattr__(self, name: str, value: Any) -> None:
+         if (
+             not name.startswith("_")
+diff --git a/keylime/models/verifier/attestation.py b/keylime/models/verifier/attestation.py
+index ff63c1c..92f8aa3 100644
+--- a/keylime/models/verifier/attestation.py
++++ b/keylime/models/verifier/attestation.py
+@@ -140,8 +140,8 @@ class Attestation(PersistableModel):
+         #     attestation.starting_ima_offset = agent.next_ima_ml_entry
+ 
+     def receive_capabilities(self, data):
+-        evidence_data = data.get("evidence_supported", [])
+         system_info_data = data.get("system_info", {})
++        evidence_data = data.get("evidence_supported", [])
+ 
+         if not evidence_data:
+             self._add_error("evidence", "is required")
+@@ -153,7 +153,7 @@ class Attestation(PersistableModel):
+ 
+         for item_data in evidence_data:
+             try:
+-                item = verifier_models.EvidenceItem.create(item_data)
++                item = verifier_models.EvidenceItem(item_data)
+                 self.evidence.add(item)
+             except TypeError:
+                 self._add_error("evidence", "may only contain objects with key-value pairs")
+@@ -269,7 +269,7 @@ class Attestation(PersistableModel):
+         errors = self.get_errors(included_associations=["evidence"], include_embeds=True)
+ 
+         if errors.get("evidence"):
+-            if self.stage == "evaluating_evidence":
++            if self.stage == "awaiting_evidence":
+                 errors["evidence_supported"] = errors["evidence"]
+             else:
+                 errors["evidence_collected"] = errors["evidence"]
+diff --git a/keylime/models/verifier/evidence.py b/keylime/models/verifier/evidence.py
+index db70d43..279aeb5 100644
+--- a/keylime/models/verifier/evidence.py
++++ b/keylime/models/verifier/evidence.py
+@@ -27,6 +27,25 @@ class EvidenceModel(PersistableModel):
+ 
+ 
+ class EvidenceItem(EvidenceModel):
++
++    def __init__(self, data=None, process_associations=True, memo=None) -> None:
++        super().__init__(memo=memo)
++
++        if data is None or not isinstance(data, dict):
++            return
++
++        if "evidence_class" in data:
++            self.change("evidence_class", data["evidence_class"])
++        if "evidence_type" in data:
++            self.change("evidence_type", data["evidence_type"])
++
++        caps_data = data.get("capabilities")
++        if isinstance(caps_data, dict):
++            if self.values.get("evidence_class") == "certification":
++                self.capabilities = CertificationCapabilities(caps_data)
++            elif self.values.get("evidence_class") == "log":
++                self.capabilities = LogCapabilities(caps_data)
++
+     @classmethod
+     def _schema(cls):
+         cls._persist_as("evidence_items")
+@@ -44,13 +63,13 @@ class EvidenceItem(EvidenceModel):
+         cls._embeds_inline("results", Results, nullable=True)
+ 
+     @classmethod
+-    def create(cls, data):
+-        if not isinstance(data, dict):
+-            TypeError("each item in 'evidence_supported' must be a dictionary")
+-
+-        evidence_item = EvidenceItem.empty()
+-        evidence_item.receive_capabilities(data)
+-        return evidence_item
++    def _new_associated_record(self, association, item_data):
++        if association.name == "capabilities":
++            if self.values.get("evidence_class") == "certification":
++                return verifier_models.evidence.CertificationCapabilities(item_data)
++            if self.values.get("evidence_class") == "log":
++                return verifier_models.evidence.LogCapabilities
++        return super()._new_associated_record(association, item_data)
+ 
+     def refresh_metadata(self):
+         if self.attestation:
+diff --git a/keylime/verification/base/engine_driver.py b/keylime/verification/base/engine_driver.py
+index 8737a15..a716cc9 100644
+--- a/keylime/verification/base/engine_driver.py
++++ b/keylime/verification/base/engine_driver.py
+@@ -122,8 +122,8 @@ class EngineDriver:
+             self.attestation.evidence.reset()
+ 
+         # TODO: finalise evidence requested
+-        self.attestation.evidence.clear()
+-        self.attestation.evidence.update(evidence_requested)
++        #self.attestation.evidence.clear()
++        #self.attestation.evidence.update(evidence_requested)
+ 
+         return self
+ 
+diff --git a/keylime/verification/tpm_engine.py b/keylime/verification/tpm_engine.py
+index adeede0..f438bf0 100644
+--- a/keylime/verification/tpm_engine.py
++++ b/keylime/verification/tpm_engine.py
+@@ -184,7 +184,13 @@ class TPMEngine(VerificationEngine):
+         alg_choices = self._hash_algorithm_choices(evidence_item)
+ 
+         subjects = copy.deepcopy(evidence_item.capabilities.available_subjects)
+-        pcr_banks = list(subjects.keys())
++        # Get all PCR banks offered by the agent
++        all_pcr_banks = list(subjects.keys())
++
++        # Filter out any banks that are not in the verifier's list of choices
++        pcr_banks = [bank for bank in all_pcr_banks if bank in alg_choices]
++
++        # Sort the filtered list according to the verifier's preference. This can no longer fail.
+         pcr_banks.sort(key=lambda pcr_bank: alg_choices.index(pcr_bank))
+ 
+         found = False
+diff --git a/keylime/web/verifier/push_attestation_controller.py b/keylime/web/verifier/push_attestation_controller.py
+index b8dfb47..2ca4acc 100755
+--- a/keylime/web/verifier/push_attestation_controller.py
++++ b/keylime/web/verifier/push_attestation_controller.py
+@@ -1,3 +1,4 @@
++import json
+ from keylime import keylime_logging
+ from keylime.models.base import Timestamp
+ from keylime.models.verifier import VerifierAgent, Attestation
+@@ -184,6 +185,12 @@ class PushAttestationController(Controller):
+ 
+     # POST /v3[.:minor]/agents/:agent_id/attestations
+     def create(self, agent_id, **params):
++        try:
++            body = json.loads(self.action_handler.request.body)
++        except json.JSONDecodeError:
++            self.respond(400, "Bad Request", {"errors": ["Invalid JSON in request body"]})
++            return
++
+         agent = VerifierAgent.get(agent_id)
+ 
+         if not agent:
+@@ -203,7 +210,7 @@ class PushAttestationController(Controller):
+             return
+ 
+         new_attestation = Attestation.create(agent)
+-        new_attestation.receive_capabilities(params)
++        new_attestation.receive_capabilities(body.get("data", {}).get("attributes", {}))
+         EngineDriver(new_attestation).process_capabilities()
+ 
+         if new_attestation.errors:
+@@ -225,7 +232,8 @@ class PushAttestationController(Controller):
+         # new_attestation.cleanup_stale_priors()
+ 
+         self.set_header("Location", f"{self.path}/{new_attestation.index}")
+-        self.respond(201, "Success", new_attestation.render_evidence_requested())
++        #self.respond(201, "Success", new_attestation.render_evidence_requested())
++        self.send_response(status_code=201, body={"data": new_attestation.render_evidence_requested()})
+ 
+     # PATCH /v3[.:minor]/agents/:agent_id/attestations/:index
+     def update(self, agent_id, index, **params):
+@@ -257,7 +265,7 @@ class PushAttestationController(Controller):
+             self.respond(403)
+             return
+ 
+-        attestation.receive_evidence(params)
++        attestation.receive_evidence(params.get("data", {}).get("attributes", {}))
+         driver = EngineDriver(attestation).process_evidence()
+ 
+         # attestation will contain errors if the JSON request is malformed/invalid (e.g., if an unrecognised hash
+@@ -274,7 +282,8 @@ class PushAttestationController(Controller):
+         # response = {"time_to_next_attestation": int(time_to_next_attestation.total_seconds())}
+         # self.respond(202, "Success", response)
+ 
+-        self.respond(202, "Success", attestation.render_evidence_acknowledged())
++        #self.respond(202, "Success", attestation.render_evidence_acknowledged())
++        self.send_response(status_code=202, body={"data": attestation.render_evidence_acknowledged()})
+ 
+         # Verify attestation after response is sent, so the agent does not need to wait for verification to complete
+         driver.verify_evidence()
