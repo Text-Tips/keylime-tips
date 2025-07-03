@@ -56,7 +56,7 @@ index a662bd1..50c2fa1 100644
          if (
              not name.startswith("_")
 diff --git a/keylime/models/verifier/attestation.py b/keylime/models/verifier/attestation.py
-index ff63c1c..92f8aa3 100644
+index ff63c1c..6f9cbe1 100644
 --- a/keylime/models/verifier/attestation.py
 +++ b/keylime/models/verifier/attestation.py
 @@ -140,8 +140,8 @@ class Attestation(PersistableModel):
@@ -78,7 +78,25 @@ index ff63c1c..92f8aa3 100644
                  self.evidence.add(item)
              except TypeError:
                  self._add_error("evidence", "may only contain objects with key-value pairs")
-@@ -269,7 +269,7 @@ class Attestation(PersistableModel):
+@@ -205,9 +205,14 @@ class Attestation(PersistableModel):
+         return output
+ 
+     def render_evidence_requested(self):
+-        output = self.render(["stage"])
+-        output["evidence_requested"] = [item.render_evidence_requested() for item in self.evidence]
+-        output |= self._render_timestamps()
++        attributes = self.render(["stage"])
++        attributes["evidence_requested"] = [item.render_evidence_requested() for item in self.evidence]
++        attributes |= self._render_timestamps()
++
++        output = {
++            "type": "attestation",
++            "attributes": attributes,
++        }
+         return output
+ 
+     def render_evidence_acknowledged(self):
+@@ -269,7 +274,7 @@ class Attestation(PersistableModel):
          errors = self.get_errors(included_associations=["evidence"], include_embeds=True)
  
          if errors.get("evidence"):
