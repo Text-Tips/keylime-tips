@@ -275,3 +275,7 @@ Check where Verifier is running:
 --------------------------------
 $ sudo ss -lntp | grep 8881
 LISTEN 0      128        127.0.0.1:8881       0.0.0.0:*    users:(("python3",pid=236775,fd=4))
+
+Mechanism to stop process in running port:
+------------------------------------------
+sudo kill -9 $(sudo ss -lntp | grep 8881 | awk -F "pid=" '{print $2}' | awk -F "," '{print $1}')
