@@ -172,10 +172,20 @@ index 8737a15..a716cc9 100644
          return self
  
 diff --git a/keylime/verification/tpm_engine.py b/keylime/verification/tpm_engine.py
-index adeede0..f438bf0 100644
+index adeede0..8174887 100644
 --- a/keylime/verification/tpm_engine.py
 +++ b/keylime/verification/tpm_engine.py
-@@ -184,7 +184,13 @@ class TPMEngine(VerificationEngine):
+@@ -44,8 +44,7 @@ class TPMEngine(VerificationEngine):
+         for item in tpm_quote_items:
+             item_sig_schemes = item.capabilities.signature_schemes
+             item_hash_algs = item.capabilities.hash_algorithms
+-            pcr_banks = item.capabilities.available_subjects.keys()
+-
++            pcr_banks = [bank for bank, pcrs in item.capabilities.available_subjects.items() if pcrs]            
+             useable_key_found = False
+ 
+             for key in item.capabilities.certification_keys:
+@@ -184,7 +183,13 @@ class TPMEngine(VerificationEngine):
          alg_choices = self._hash_algorithm_choices(evidence_item)
  
          subjects = copy.deepcopy(evidence_item.capabilities.available_subjects)
@@ -190,6 +200,36 @@ index adeede0..f438bf0 100644
          pcr_banks.sort(key=lambda pcr_bank: alg_choices.index(pcr_bank))
  
          found = False
+@@ -209,12 +214,28 @@ class TPMEngine(VerificationEngine):
+         evidence_item.chosen_parameters.selected_subjects = subjects
+ 
+     def _select_hash_algorithm(self, evidence_item):
+-        for pcr_bank, pcr_nums in evidence_item.chosen_parameters.selected_subjects.items():
++        """for pcr_bank, pcr_nums in evidence_item.chosen_parameters.selected_subjects.items():
+             if pcr_nums is None:
+                 continue
+ 
+             evidence_item.choose_parameters({"hash_algorithm": pcr_bank})
++            return"""
++        for pcr_bank, pcr_nums in evidence_item.chosen_parameters.selected_subjects.items():
++            if pcr_nums is None:
++                continue
++        available_banks = [
++            bank for bank, pcrs in evidence_item.chosen_parameters.selected_subjects.items() if pcrs
++        ]
++
++        evidence_item.choose_parameters({"hash_algorithm": pcr_bank})
++        if not available_banks:
++            msg = "must select PCRs for at least one hash algorithm bank"
++            evidence_item.chosen_parameters._add_error("selected_subjects", msg)
+             return
++        preferred_order = ["sha512", "sha384", "sha256", "sha1"]
++        available_banks.sort(key=lambda bank: preferred_order.index(bank) if bank in preferred_order else 99)
++        strongest_alg = available_banks[0]
++        evidence_item.choose_parameters({"hash_algorithm": strongest_alg})
+ 
+     def _select_uefi_log_item(self):
+         if not self.expects_uefi_log:
 diff --git a/keylime/web/verifier/push_attestation_controller.py b/keylime/web/verifier/push_attestation_controller.py
 index b8dfb47..2ca4acc 100755
 --- a/keylime/web/verifier/push_attestation_controller.py
