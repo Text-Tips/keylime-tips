@@ -279,3 +279,7 @@ LISTEN 0      128        127.0.0.1:8881       0.0.0.0:*    users:(("python3",pid
 Mechanism to stop process in running port:
 ------------------------------------------
 sudo kill -9 $(sudo ss -lntp | grep 8881 | awk -F "pid=" '{print $2}' | awk -F "," '{print $1}')
+
+All in once Verifier startup:
+-----------------------------
+sudo kill -9 $(sudo ss -lntp | grep 8881 | awk -F "pid=" '{print $2}' | awk -F "," '{print $1}'); sudo rm /var/lib/keylime/cv_data.sqlite; sudo python3 -m keylime.cmd.verifier
