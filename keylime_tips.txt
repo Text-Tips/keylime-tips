@@ -290,3 +290,11 @@ DEBUG keylime_push_model_agent > TPM Encryption Algorithm: rsa
 DEBUG keylime_push_model_agent > TPM Hash Algorithm: sha256
 DEBUG keylime_push_model_agent > TPM Signing Algorithm: rsassa
 DEBUG keylime_push_model_agent > Agent Data Path: /var/lib/keylime/agent_data.json
+
+Some capabilities tpm2 useful commands:
+---------------------------------------
+tpm2_getcap algorithms
+tpm2_getcap pcrs
+tpm2_getcap commands
+# To list all the possibilities:
+tpm2_getcap -l
