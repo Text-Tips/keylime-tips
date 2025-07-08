@@ -283,3 +283,10 @@ sudo kill -9 $(sudo ss -lntp | grep 8881 | awk -F "pid=" '{print $2}' | awk -F "
 All in once Verifier startup:
 -----------------------------
 sudo kill -9 $(sudo ss -lntp | grep 8881 | awk -F "pid=" '{print $2}' | awk -F "," '{print $1}'); sudo rm /var/lib/keylime/cv_data.sqlite; sudo python3 -m keylime.cmd.verifier
+
+Context Initialization (logs):
+------------------------------
+DEBUG keylime_push_model_agent > TPM Encryption Algorithm: rsa
+DEBUG keylime_push_model_agent > TPM Hash Algorithm: sha256
+DEBUG keylime_push_model_agent > TPM Signing Algorithm: rsassa
+DEBUG keylime_push_model_agent > Agent Data Path: /var/lib/keylime/agent_data.json
