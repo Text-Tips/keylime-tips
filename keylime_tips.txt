@@ -298,3 +298,7 @@ tpm2_getcap pcrs
 tpm2_getcap commands
 # To list all the possibilities:
 tpm2_getcap -l
+
+Some other useful tpm2 commands:
+--------------------------------
+tpm2_flushcontext -l -s -t
