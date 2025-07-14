@@ -181,6 +181,8 @@ Specify appropriate version through keylime_tenant:
 keylime_tenant -c add --cert default -u <UUID> --supported-version 3.0
 keylime_tenant -c add --cert default -u d432fbb3-d2f1-4a97-9ef7-75bd81c00000 --supported-version 3.0
 keylime_tenant -c add --cert default -u d432fbb3-d2f1-4a97-9ef7-75bd81c00000 --supported-version 3.0 --push-model
+# Add a particular tpm_policy:
+sudo keylime_tenant -c update -u d432fbb3-d2f1-4a97-9ef7-75bd81c00000 --tpm_policy '{"0":"0x0000000000000000000000000000000000000000000000000000000000000000"}' --push-model
 
 Remove quote in Tenant:
 -----------------------
@@ -285,6 +287,8 @@ sudo kill -9 $(sudo ss -lntp | grep 8881 | awk -F "pid=" '{print $2}' | awk -F "
 All in once Verifier startup:
 -----------------------------
 sudo kill -9 $(sudo ss -lntp | grep 8881 | awk -F "pid=" '{print $2}' | awk -F "," '{print $1}'); sudo rm /var/lib/keylime/cv_data.sqlite; sudo python3 -m keylime.cmd.verifier
+# Deleting caches:
+sudo kill -9 $(sudo ss -lntp | grep 8881 | awk -F "pid=" '{print $2}' | awk -F "," '{print $1}'); sudo rm /var/lib/keylime/cv_data.sqlite; for file in $(sudo find . -iname __pycache__ -print); do sudo rm -fr $file; done ; sudo python3 -m keylime.cmd.verifier
 
 Context Initialization (logs):
 ------------------------------
