@@ -308,3 +308,8 @@ tpm2_getcap -l
 Some other useful tpm2 commands:
 --------------------------------
 tpm2_flushcontext -l -s -t
+
+Update a cargo package:
+-----------------------
+# It is just an install (--force)
+cargo install cargo-tarpaulin --force
