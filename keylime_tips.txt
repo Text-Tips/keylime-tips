@@ -323,3 +323,8 @@ d432fbb3-d2f1-4a97-9ef7-75bd81c00000|1|awaiting_evidence|pending||2025-07-17T10:
 d432fbb3-d2f1-4a97-9ef7-75bd81c00000|2|awaiting_evidence|pending||2025-07-17T10:56:43.757472+00:00|2025-07-17T10:56:43.772229+00:00|2025-07-17T11:26:43.772229+00:00||
 d432fbb3-d2f1-4a97-9ef7-75bd81c00000|3|awaiting_evidence|pending||2025-07-17T11:01:35.804211+00:00|2025-07-17T11:01:35.848834+00:00|2025-07-17T11:31:35.848834+00:00||
 d432fbb3-d2f1-4a97-9ef7-75bd81c00000|4|awaiting_evidence|pending||2025-07-17T11:05:48.243680+00:00|2025-07-17T11:05:48.290229+00:00|2025-07-17T11:35:48.290229+00:00||
+
+Creating and loading a IMA based policy:
+----------------------------------------
+sudo keylime-policy create runtime --ima-measurement-list -o policy.json
+sudo keylime_tenant --runtime-policy policy.json --cert default -u d432fbb3-d2f1-4a97-9ef7-75bd81c00000 --supported-version 3.0 --push-model
