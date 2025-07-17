@@ -313,3 +313,13 @@ Update a cargo package:
 -----------------------
 # It is just an install (--force)
 cargo install cargo-tarpaulin --force
+
+Check attestations in Verifier:
+-------------------------------
+sudo sqlite3 /var/lib/keylime/cv_data.sqlite
+sqlite> select * from attestations;
+d432fbb3-d2f1-4a97-9ef7-75bd81c00000|0|awaiting_evidence|pending||2025-07-17T10:04:16.157360+00:00|2025-07-17T10:04:16.250892+00:00|2025-07-17T10:34:16.250892+00:00||
+d432fbb3-d2f1-4a97-9ef7-75bd81c00000|1|awaiting_evidence|pending||2025-07-17T10:20:00.742014+00:00|2025-07-17T10:20:00.787738+00:00|2025-07-17T10:50:00.787738+00:00||
+d432fbb3-d2f1-4a97-9ef7-75bd81c00000|2|awaiting_evidence|pending||2025-07-17T10:56:43.757472+00:00|2025-07-17T10:56:43.772229+00:00|2025-07-17T11:26:43.772229+00:00||
+d432fbb3-d2f1-4a97-9ef7-75bd81c00000|3|awaiting_evidence|pending||2025-07-17T11:01:35.804211+00:00|2025-07-17T11:01:35.848834+00:00|2025-07-17T11:31:35.848834+00:00||
+d432fbb3-d2f1-4a97-9ef7-75bd81c00000|4|awaiting_evidence|pending||2025-07-17T11:05:48.243680+00:00|2025-07-17T11:05:48.290229+00:00|2025-07-17T11:35:48.290229+00:00||
