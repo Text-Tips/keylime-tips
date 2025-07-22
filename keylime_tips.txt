@@ -31,6 +31,8 @@ Execution of coverage tests through Cargo tarpaulin (Rust):
 cargo tarpaulin
 cargo tarpaulin --out Html
 cargo tarpaulin --out Json
+# Execute and open report
+cargo tarpaulin  --out Html; firefox tarpaulin-report.html
 # Execute it for a particular feature:
 cargo tarpaulin --out Html --features testing
 
