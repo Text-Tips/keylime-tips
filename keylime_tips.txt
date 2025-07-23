@@ -35,6 +35,8 @@ cargo tarpaulin --out Json
 cargo tarpaulin  --out Html; firefox tarpaulin-report.html
 # Execute it for a particular feature:
 cargo tarpaulin --out Html --features testing
+# Execute it for a particular feature and open report:
+cargo tarpaulin --out Html --features testing; firefox tarpaulin-report.html
 
 Generation default configuration for verifier:
 ----------------------------------------------
