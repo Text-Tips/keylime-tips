@@ -334,3 +334,15 @@ sudo keylime-policy create runtime --ima-measurement-list -o policy.json
 sudo keylime_tenant --runtime-policy policy.json --cert default -u d432fbb3-d2f1-4a97-9ef7-75bd81c00000 --supported-version 3.0 --push-model
 # TPM only policy:
 sudo keylime_tenant -c update -u d432fbb3-d2f1-4a97-9ef7-75bd81c00000 --tpm_policy '{"0":"0x5C4103D6DCF2A90C30A646CC090A8DE10CBE1C4A1F21C0D7D4F2F4836B2055DA"}' --push-model
+
+Some useful testing commands:
+-----------------------------
+# Directory of upstream sources:
+cd /var/tmp/rust-keylime_sources/
+# Installation of upstream sources:
+# this is a git repo with sources, do any change here (e.g. checkout) and what's there will be used for buidling
+cd /var/tmp/tmt/run-040/plans/upstream-keylime-swtpm-dev/discover/default-0/tests/setup/install_upstream_rust_keylime/
+./test.sh
+# Test execution:
+cd /var/tmp/tmt/run-040/plans/upstream-keylime-swtpm-dev/discover/default-0/tests/functional/push-attestation-on-localhost
+./test.sh
