@@ -346,3 +346,7 @@ cd /var/tmp/tmt/run-040/plans/upstream-keylime-swtpm-dev/discover/default-0/test
 # Test execution:
 cd /var/tmp/tmt/run-040/plans/upstream-keylime-swtpm-dev/discover/default-0/tests/functional/push-attestation-on-localhost
 ./test.sh
+
+Log configuration file for Keylime:
+-----------------------------------
+/etc/systemd/system/keylime_agent.service.d/20-rust_log_trace.conf
