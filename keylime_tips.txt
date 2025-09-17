@@ -350,3 +350,61 @@ cd /var/tmp/tmt/run-040/plans/upstream-keylime-swtpm-dev/discover/default-0/test
 Log configuration file for Keylime:
 -----------------------------------
 /etc/systemd/system/keylime_agent.service.d/20-rust_log_trace.conf
+
+Add AI LLMs information to commits:
+-----------------------------------
+Co-Authored-By: Claude <noreply@anthropic.com>
+Assisted-by: Gemini <gemini@google.com>
+
+Run test regression with current Test status:
+---------------------------------------------
+### Option 1:
+https://github.com/keylime/rust-keylime/issues/1077#issue-3317851353
+# With previous  procedure, you only need to edit plans/main.fmf before tmt execution and update these 4 variables accordingly
+https://github.com/RedHat-SP-Security/keylime-tests/blob/main/plans/main.fmf#L8C1-L13C41
+# Which are:
+environment:
+  KEYLIME_UPSTREAM_URL: "https://github.com/keylime/keylime.git"
+  KEYLIME_UPSTREAM_BRANCH: "master"
+  # variables below impact only plans that use /setup/install_upstream_rust_keylime
+  # task, not plans using /setup/install_rust_keylime_from_copr
+  RUST_KEYLIME_UPSTREAM_URL: "https://github.com/keylime/rust-keylime.git"
+  RUST_KEYLIME_UPSTREAM_BRANCH: "master"
+# To summarize all the steps:
+git clone -b test_push_attestation https://github.com/ansasaki/keylime-tests.git
+cd keylime-tests
+cat > plans/reproducer.fmf <<_EOF
+summary:
+  Tests used by Packit/TFT CI on Github to test upstream keylime
+
+environment+:
+  TPM_BINARY_MEASUREMENTS: /var/tmp/binary_bios_measurements
+  KEYLIME_RUST_CODE_COVERAGE: 0
+  KEYLIME_UPSTREAM_URL: "https://github.com/keylime/keylime.git"
+  KEYLIME_UPSTREAM_BRANCH: "master"
+  # variables below impact only plans that use /setup/install_upstream_rust_keylime
+  # task, not plans using /setup/install_rust_keylime_from_copr
+  RUST_KEYLIME_UPSTREAM_URL: "https://github.com/keylime/rust-keylime.git"
+  RUST_KEYLIME_UPSTREAM_BRANCH: "master"
+
+discover:
+  how: fmf
+  test:
+   - /setup/apply_workarounds
+   - /setup/configure_tpm_emulator
+   - /setup/install_upstream_keylime
+   - /setup/install_upstream_rust_keylime
+   - /setup/enable_keylime_debug_messages
+   - /setup/configure_kernel_ima_module/ima_policy_simple
+   - /functional/push-attestation-on-localhost
+
+execute:
+    how: tmt
+_EOF
+
+# have a Fedora42 test system (no TPM required, will be emulated) ready and available through $IP
+tmt -c distro=fedora-42 run -vvv discover plan -n plans/reproducer provision -h connect -g $IP prepare execute
+
+### Option 2:
+# another option might be clonning Anderson's branch with tests and open a new PR where those variables would be modified.
+# That would run tests through Packit so you won't have to run it yourself
