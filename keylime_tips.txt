@@ -408,3 +408,40 @@ tmt -c distro=fedora-42 run -vvv discover plan -n plans/reproducer provision -h 
 ### Option 2:
 # another option might be clonning Anderson's branch with tests and open a new PR where those variables would be modified.
 # That would run tests through Packit so you won't have to run it yourself
+
+# Error with selinux-policy-devel and tpm2-abrmd:
+--------------------------------------------------
+# When facing next issue on test execution:
+transaction failed: Rpm transaction failed.
+  - file /usr/share/selinux/devel/include/contrib/tabrmd.if from install of selinux-policy-devel-42.8-1.fc42.noarch conflicts with file from package tpm2-abrmd-selinux-2.3.1-13.fc42.noarch
+
+# Replace /setup/configure_tpm_emulator with /setup/configure_swtpm_device in plans/reproducer.fmf
+
+# An example of final reproducer file candidate:
+------------------------------------------------
+summary:
+  Tests used by Packit/TFT CI on Github to test upstream keylime
+
+environment+:
+  TPM_BINARY_MEASUREMENTS: /var/tmp/binary_bios_measurements
+  KEYLIME_RUST_CODE_COVERAGE: 0
+
+discover:
+  how: fmf
+  test:
+   - /setup/configure_swtpm_device
+   - /setup/install_upstream_keylime
+   - /setup/install_upstream_rust_keylime
+   - /setup/enable_keylime_debug_messages
+   - /setup/configure_kernel_ima_module/ima_policy_simple
+   - /functional/push-attestation-on-localhost
+
+execute:
+    how: tmt
+
+# In case you want to test a patch in an already working testing machine:
+-------------------------------------------------------------------------
+1 - In /var/tmp/rust-keylime_sources/ there are rust-agent upstream sources
+2 - If you want to install an updated version, just get your changes there by whatever means
+3 - Then go to /var/tmp/tmt/run-026/plans/reproducer/discover/default-0/tests/setup/install_upstream_rust_keylime
+4 - run ./test.sh
