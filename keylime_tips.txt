@@ -445,3 +445,7 @@ execute:
 2 - If you want to install an updated version, just get your changes there by whatever means
 3 - Then go to /var/tmp/tmt/run-026/plans/reproducer/discover/default-0/tests/setup/install_upstream_rust_keylime
 4 - run ./test.sh
+
+# Get the dependencies tree of a Cargo based project:
+-----------------------------------------------------
+cargo tree
