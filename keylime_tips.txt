@@ -449,3 +449,7 @@ execute:
 # Get the dependencies tree of a Cargo based project:
 -----------------------------------------------------
 cargo tree
+
+Specifying a particular model for claude code:
+----------------------------------------------
+ANTHROPIC_MODEL=claude-sonnet-4@20250514 claude
