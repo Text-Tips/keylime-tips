@@ -454,14 +454,13 @@ Specifying a particular model for claude code:
 ----------------------------------------------
 ANTHROPIC_MODEL=claude-sonnet-4@20250514 claude
 
-Create MTLS certificates for Push Model agent:
-----------------------------------------------
-# Generate registrar scripts:
-sudo ./generate-registrar-tls.sh
+Create MTLS certificates for Push Model agent communication with Registrar:
+---------------------------------------------------------------------------
 # Initialize the CA first (if not already done)
-sudo keylime_ca -d /var/lib/keylime/reg_ca/ --command init
+sudo keylime_ca -d /var/lib/keylime/reg_ca --command init
+sudo keylime_ca -d /var/lib/keylime/reg_ca --command create --name server
 # Then create the client certificate
-sudo keylime_ca -d /var/lib/keylime/reg_ca/ --command create --name push-model-agent
+sudo keylime_ca -d /var/lib/keylime/reg_ca/ --command create --name client
 
 #### And use next configuration in agent:
 [agent]
@@ -471,8 +470,8 @@ registrar_ip = "127.0.0.1"
 registrar_port = 8891
 registrar_tls_enabled = true
 registrar_tls_ca_cert = "/var/lib/keylime/reg_ca/cacert.crt"
-registrar_tls_client_cert = "/var/lib/keylime/reg_ca/push-model-agent-cert.crt"
-registrar_tls_client_key = "/var/lib/keylime/reg_ca/push-model-agent-private.pem"
+registrar_tls_client_cert = "/var/lib/keylime/reg_ca/client-cert.crt"
+registrar_tls_client_key = "/var/lib/keylime/reg_ca/client-private.pem"
 
 # Enable mTLS communication between agent, verifier and tenant.
 # Details on why setting it to "False" is generally considered insecure can be found
@@ -482,3 +481,14 @@ enable_agent_mtls = true
 ### On registrar, to indicate reg_ca, next is use:
 # the registrar server in the /var/lib/keylime/reg_ca directory, if not present.
 tls_dir = reg_ca
+
+Copy MTLS certificates for Push Model agent communication with Verifier:
+------------------------------------------------------------------------
+rm -fr /var/lib/keylime/cv_ca
+cp -rfav /var/lib/keylime/reg_ca /var/lib/keylime/cv_ca
+
+Some interesting links about Keylime certificates generation:
+-------------------------------------------------------------
+https://github.com/RedHat-SP-Security/keylime-tests/blob/main/functional/basic-attestation-with-custom-certificates/test.sh
+https://github.com/RedHat-SP-Security/keylime-tests/blob/main/functional/basic-attestation-with-concatenated-certificates/test.sh
+https://docs.google.com/document/d/1NNjkpkl5ntkwNWBsRa9Hn0Y_bx3xF3hyxqqIcIHsOb0/edit?tab=t.0#heading=h.g7ctx3qlwqp1
