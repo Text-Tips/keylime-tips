@@ -453,3 +453,32 @@ cargo tree
 Specifying a particular model for claude code:
 ----------------------------------------------
 ANTHROPIC_MODEL=claude-sonnet-4@20250514 claude
+
+Create MTLS certificates for Push Model agent:
+----------------------------------------------
+# Generate registrar scripts:
+sudo ./generate-registrar-tls.sh
+# Initialize the CA first (if not already done)
+sudo keylime_ca -d /var/lib/keylime/reg_ca/ --command init
+# Then create the client certificate
+sudo keylime_ca -d /var/lib/keylime/reg_ca/ --command create --name push-model-agent
+
+#### And use next configuration in agent:
+[agent]
+
+# The address and port of registrar server which agent communicate with
+registrar_ip = "127.0.0.1"
+registrar_port = 8891
+registrar_tls_enabled = true
+registrar_tls_ca_cert = "/var/lib/keylime/reg_ca/cacert.crt"
+registrar_tls_client_cert = "/var/lib/keylime/reg_ca/push-model-agent-cert.crt"
+registrar_tls_client_key = "/var/lib/keylime/reg_ca/push-model-agent-private.pem"
+
+# Enable mTLS communication between agent, verifier and tenant.
+# Details on why setting it to "False" is generally considered insecure can be found
+# on https://github.com/keylime/keylime/security/advisories/GHSA-2m39-75g9-ff5r
+enable_agent_mtls = true
+
+### On registrar, to indicate reg_ca, next is use:
+# the registrar server in the /var/lib/keylime/reg_ca directory, if not present.
+tls_dir = reg_ca
