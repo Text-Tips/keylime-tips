@@ -492,3 +492,8 @@ Some interesting links about Keylime certificates generation:
 https://github.com/RedHat-SP-Security/keylime-tests/blob/main/functional/basic-attestation-with-custom-certificates/test.sh
 https://github.com/RedHat-SP-Security/keylime-tests/blob/main/functional/basic-attestation-with-concatenated-certificates/test.sh
 https://docs.google.com/document/d/1NNjkpkl5ntkwNWBsRa9Hn0Y_bx3xF3hyxqqIcIHsOb0/edit?tab=t.0#heading=h.g7ctx3qlwqp1
+
+Original push mode Github information:
+--------------------------------------
+KEYLIME_UPSTREAM_URL: https://github.com/hse-aurora/keylime-oss.git
+KEYLIME_UPSTREAM_BRANCH: push-attestation
