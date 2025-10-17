@@ -497,3 +497,13 @@ Original push mode Github information:
 --------------------------------------
 KEYLIME_UPSTREAM_URL: https://github.com/hse-aurora/keylime-oss.git
 KEYLIME_UPSTREAM_BRANCH: push-attestation
+
+Check latest execution results directly in yaml file:
+-----------------------------------------------------
+/var/tmp/tmt/run-011/plans/reproducer-focused/execute/results.yaml
+
+Run a complete regression for Keylime (manually):
+-------------------------------------------------
+main.fmf (lines 8-9, 12-13): Change KEYLIME_UPSTREAM_URL and KEYLIME_UPSTREAM_BRANCH to your fork/branch
+CI runs: upstream-keylime-all-tests plan for main branch PRs
+This plan runs functional, compatibility, regression, update, and sanity tests plus the upstream test suite
