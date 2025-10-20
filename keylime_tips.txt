@@ -508,3 +508,5 @@ Run a complete regression for Keylime (manually):
 # CI runs: upstream-keylime-all-tests plan for main branch PRs
 # This plan runs functional, compatibility, regression, update, and sanity tests plus the upstream test suite:
 tmt run -vvv plan --name upstream-keylime-all-tests discover prepare provision -h virtual -i Fedora-42 -c system execute report finish
+# Or with a particular already provisioned machine
+tmt run -vvv plan --name upstream-keylime-all-tests discover prepare provision -h connect -g 10.0.184.103 execute report finish
