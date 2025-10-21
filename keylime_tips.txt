@@ -510,3 +510,7 @@ Run a complete regression for Keylime (manually):
 tmt run -vvv plan --name upstream-keylime-all-tests discover prepare provision -h virtual -i Fedora-42 -c system execute report finish
 # Or with a particular already provisioned machine
 tmt run -vvv plan --name upstream-keylime-all-tests discover prepare provision -h connect -g 10.0.184.103 execute report finish
+
+Prompt to let Claude what to check before committing:
+-----------------------------------------------------
+Can you please verify CI jobs are not broken (lints, mypy, pyright, tests and style-checks)?
