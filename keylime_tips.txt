@@ -513,7 +513,7 @@ tmt run -vvv plan --name upstream-keylime-all-tests discover prepare provision -
 
 Prompt to let Claude what to check before committing:
 -----------------------------------------------------
-Can you please verify CI jobs are not broken (lints, mypy, pyright, tests and style-checks)?
+Can you please verify CI jobs are not broken (lints, mypy, pyright, tests and style-checks)? For style-checks, apply "pre-commit run" to appropriate files
 
 Tox execution before uploading fix to Keylime project:
 ------------------------------------------------------
