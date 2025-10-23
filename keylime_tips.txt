@@ -404,6 +404,8 @@ _EOF
 
 # have a Fedora42 test system (no TPM required, will be emulated) ready and available through $IP
 tmt -c distro=fedora-42 run -vvv discover plan -n plans/reproducer provision -h connect -g $IP prepare execute
+# Or a particular test
+tmt -c distro=fedora-42 run -vvv discover plan -test functional/push-attestation-on-localhost provision -h connect -g $IP prepare execute
 
 ### Option 2:
 # another option might be clonning Anderson's branch with tests and open a new PR where those variables would be modified.
@@ -525,8 +527,29 @@ Manual precommit run:
 pre-commit run --all-files
 pre-commit run --files test/test_evidence_model.py
 
-Ensure no issues with TPM for push-attestation:
------------------------------------------------
+Ensure no issues with TPM for keylime testing:
+----------------------------------------------
 systemctl stop 'swtpm*.service' 2>/dev/null || true
+
+# Kill any lingering processes
+pkill -9 swtpm 2>/dev/null || true
+
+# Clean up stale files
+rm -f /var/run/swtpm-*.sock 2>/dev/null || true
+
+# Clean service files (test framework will recreate them)
 rm -f /etc/systemd/system/swtpm*.service
 systemctl daemon-reload
+
+# Ensure TPM kernel module is loaded (THIS IS THE KEY!)
+modprobe tpm_vtpm_proxy
+echo "tpm_vtpm_proxy" > /etc/modules-load.d/tpm.conf
+
+# Verify setup
+echo "=== TPM Module Status ==="
+lsmod | grep tpm_vtpm_proxy
+
+echo "=== TPM Devices (may not exist yet - test framework creates them) ==="
+ls -la /dev/tpm* 2>&1 || echo "No TPM devices yet (normal - test will create them)"
+
+echo "=== Cleanup Complete ==="
