@@ -524,3 +524,9 @@ Manual precommit run:
 ---------------------
 pre-commit run --all-files
 pre-commit run --files test/test_evidence_model.py
+
+Ensure no issues with TPM for push-attestation:
+-----------------------------------------------
+systemctl stop 'swtpm*.service' 2>/dev/null || true
+rm -f /etc/systemd/system/swtpm*.service
+systemctl daemon-reload
