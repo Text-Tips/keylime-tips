@@ -405,7 +405,7 @@ _EOF
 # have a Fedora42 test system (no TPM required, will be emulated) ready and available through $IP
 tmt -c distro=fedora-42 run -vvv discover plan -n plans/reproducer provision -h connect -g $IP prepare execute
 # Or a particular test
-tmt -c distro=fedora-42 run -vvv discover plan -test functional/push-attestation-on-localhost provision -h connect -g $IP prepare execute
+tmt run -vvv test --name '/functional/measured-boot-swtpm-sanity/push' provision -h connect -g 10.0.185.61
 
 ### Option 2:
 # another option might be clonning Anderson's branch with tests and open a new PR where those variables would be modified.
@@ -513,10 +513,6 @@ tmt run -vvv plan --name upstream-keylime-all-tests discover prepare provision -
 # Or with a particular already provisioned machine
 tmt run -vvv plan --name upstream-keylime-all-tests discover prepare provision -h connect -g 10.0.184.103 execute report finish
 
-Prompt to let Claude what to check before committing:
------------------------------------------------------
-Can you please verify CI jobs are not broken (lints, mypy, pyright, tests and style-checks)? For style-checks, apply "pre-commit run" to appropriate files
-
 Tox execution before uploading fix to Keylime project:
 ------------------------------------------------------
 tox -e "pylint,pylint310,mypy,pyright"
@@ -553,3 +549,7 @@ echo "=== TPM Devices (may not exist yet - test framework creates them) ==="
 ls -la /dev/tpm* 2>&1 || echo "No TPM devices yet (normal - test will create them)"
 
 echo "=== Cleanup Complete ==="
+
+Prompt to let Claude what to check before committing:
+-----------------------------------------------------
+Can you please verify CI jobs are not broken (lints, mypy, pyright, tests and style-checks)? For style-checks, apply "pre-commit run" to appropriate files
