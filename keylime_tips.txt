@@ -552,9 +552,21 @@ ls -la /dev/tpm* 2>&1 || echo "No TPM devices yet (normal - test will create the
 
 echo "=== Cleanup Complete ==="
 
-Execute a particular test:
---------------------------
+Execute a particular unit test:
+-------------------------------
 python -m pytest test/test_cloud_verifier_common.py
+
+Execute regression for push-model issues and attestations:
+----------------------------------------------------------
+# Clone repo from https://github.com/RedHat-SP-Security/keylime-tests/pull/923
+tmt -c distro=fedora-42 run -vvv discover plan -n /plans/upstream-keylime-all-tests provision -h connect -g IP prepare execute
+
+Showing logs:
+-------------
+journalctl -u keylime_verifier
+journalctl -u keylime_agent
+journalctl -u keylime_registrar
+journalctl -u keylime_push_model_agent
 
 Prompt to let Claude what to check before committing:
 -----------------------------------------------------
