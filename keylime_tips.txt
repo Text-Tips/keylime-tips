@@ -342,6 +342,8 @@ cd /var/tmp/rust-keylime_sources/
 # Installation of upstream sources:
 # this is a git repo with sources, do any change here (e.g. checkout) and what's there will be used for buidling
 cd /var/tmp/tmt/run-040/plans/upstream-keylime-swtpm-dev/discover/default-0/tests/setup/install_upstream_rust_keylime/
+# or (note change in plan):
+cd /var/tmp/tmt/run-001/plans/reproducer/discover/default-0/tests/setup/install_upstream_keylime/
 ./test.sh
 # Test execution:
 cd /var/tmp/tmt/run-040/plans/upstream-keylime-swtpm-dev/discover/default-0/tests/functional/push-attestation-on-localhost
@@ -549,6 +551,10 @@ echo "=== TPM Devices (may not exist yet - test framework creates them) ==="
 ls -la /dev/tpm* 2>&1 || echo "No TPM devices yet (normal - test will create them)"
 
 echo "=== Cleanup Complete ==="
+
+Execute a particular test:
+--------------------------
+python -m pytest test/test_cloud_verifier_common.py
 
 Prompt to let Claude what to check before committing:
 -----------------------------------------------------
