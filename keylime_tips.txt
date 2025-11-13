@@ -185,6 +185,8 @@ Specify appropriate version through keylime_tenant:
 keylime_tenant -c add --cert default -u <UUID> --supported-version 3.0
 keylime_tenant -c add --cert default -u d432fbb3-d2f1-4a97-9ef7-75bd81c00000 --supported-version 3.0
 keylime_tenant -c add --cert default -u d432fbb3-d2f1-4a97-9ef7-75bd81c00000 --supported-version 3.0 --push-model
+# Or from source:
+sudo python3 -m keylime.cmd.tenant -c add -u d432fbb3-d2f1-4a97-9ef7-75bd81c00000 --tpm_policy '{"0":"0x5C4103D6DCF2A90C30A646CC090A8DE10CBE1C4A1F21C0D7D4F2F4836B2055DA"}' --push-mode
 # Add a particular tpm_policy:
 sudo keylime_tenant -c update -u d432fbb3-d2f1-4a97-9ef7-75bd81c00000 --tpm_policy '{"0":"0x0000000000000000000000000000000000000000000000000000000000000000"}' --push-model
 
