@@ -519,7 +519,7 @@ tmt run -vvv plan --name upstream-keylime-all-tests discover prepare provision -
 
 Tox execution before uploading fix to Keylime project:
 ------------------------------------------------------
-tox -e "pylint,pylint310,mypy,pyright"
+tox -e "pylint,mypy,pyright"
 tox -e "pylint,pyright,mypy" -- test/test_timestamp.py
 
 Manual precommit run:
