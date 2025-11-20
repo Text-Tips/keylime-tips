@@ -567,6 +567,19 @@ journalctl -u keylime_agent
 journalctl -u keylime_registrar
 journalctl -u keylime_push_model_agent
 
+Presubmisssion checks for Rust agent:
+-------------------------------------
+cargo check
+cargo build
+cargo build --release
+cargo test
+cargo test --features testing
+cargo fmt --all --check
+cargo clippy --fix
+cargo clippy --all-targets --all-features
+cargo doc --no-deps
+cargo tarpaulin
+
 Prompt to let Claude what to check before committing:
 -----------------------------------------------------
 Can you please verify CI jobs are not broken (lints, mypy, pyright, tests and style-checks)? For style-checks, apply "pre-commit run" to appropriate files
