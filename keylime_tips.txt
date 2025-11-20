@@ -462,11 +462,8 @@ ANTHROPIC_MODEL=claude-sonnet-4@20250514 claude
 
 Create MTLS certificates for Push Model agent communication with Registrar:
 ---------------------------------------------------------------------------
-# Initialize the CA first (if not already done)
-sudo keylime_ca -d /var/lib/keylime/reg_ca --command init
-sudo keylime_ca -d /var/lib/keylime/reg_ca --command create --name server
-# Then create the client certificate
-sudo keylime_ca -d /var/lib/keylime/reg_ca/ --command create --name client
+# Execute local script (it generates certificates in /var/lib/keylime/reg_ca):
+sudo ./generate_keylime_certs_with_san.sh
 
 #### And use next configuration in agent:
 [agent]
