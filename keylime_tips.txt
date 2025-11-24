@@ -580,10 +580,10 @@ cargo clippy --all-targets --all-features
 cargo doc --no-deps
 cargo tarpaulin
 
-Prompt to let Claude what to check before committing:
------------------------------------------------------
-Can you please verify CI jobs are not broken (lints, mypy, pyright, tests and style-checks)? For style-checks, apply "pre-commit run" to appropriate files
-
 Update Rust to latest stable:
 -----------------------------
 rustup update stable
+
+Prompt to let Claude what to check before committing:
+-----------------------------------------------------
+Can you please verify CI jobs are not broken (lints, mypy, pyright, tests and style-checks)? For style-checks, apply "pre-commit run" to appropriate files
