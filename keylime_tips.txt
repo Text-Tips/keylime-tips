@@ -584,6 +584,19 @@ Update Rust to latest stable:
 -----------------------------
 rustup update stable
 
+Keylime Unit Tests that, normally, fail on Fedora-42:
+-----------------------------------------------------
+======================================================================================================= short test summary info =======================================================================================================
+FAILED test/test_ca_impl_openssl.py::OpenSSL_Test::test_openssl - ValueError: key_size must be at least 1024-bits.
+FAILED test/test_ca_impl_openssl.py::OpenSSL_Test::test_openssl_crl_dist - ValueError: key_size must be at least 1024-bits.
+FAILED test/test_ca_util.py::CA_Util_Test::test_ca_util - AssertionError: key_size must be at least 1024-bits.
+FAILED test/test_config.py::TestConfig::test_cache_config - configparser.NoSectionError: No section: 'verifier'
+ERROR test/test_rpm_repo.py::RpmRepo_Test::test__analyze_remote_repo - AssertionError: 77 != 0
+ERROR test/test_rpm_repo.py::RpmRepo_Test::test_analyze_local_repo - AssertionError: 77 != 0
+ERROR test/test_rpm_repo.py::RpmRepo_Test::test_analyze_rpm_pkg - AssertionError: 77 != 0
+ERROR test/test_rpm_repo.py::RpmRepo_Test::test_analyze_rpm_pkg_url - AssertionError: 77 != 0
+============================================================================= 4 failed, 1155 passed, 2 skipped, 1 xfailed, 6 warnings, 4 errors in 8.21s =========================================
+
 Prompt to let Claude what to check before committing:
 -----------------------------------------------------
 Can you please verify CI jobs are not broken (lints, mypy, pyright, tests and style-checks)? For style-checks, apply "pre-commit run" to appropriate files
