@@ -599,4 +599,4 @@ ERROR test/test_rpm_repo.py::RpmRepo_Test::test_analyze_rpm_pkg_url - AssertionE
 
 Prompt to let Claude what to check before committing:
 -----------------------------------------------------
-Can you please verify CI jobs are not broken (lints, mypy, pyright, tests and style-checks)? For style-checks, apply "pre-commit run" to appropriate files
+Can you please verify CI jobs are not broken (lints, mypy, pyright, tests and style-checks)? For linters, run tox -e "pylint,mypy,pyright". For style-checks, apply "pre-commit run" to appropriate files
