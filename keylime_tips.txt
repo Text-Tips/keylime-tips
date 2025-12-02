@@ -62,6 +62,11 @@ How tests are executed on Keylime agent at CI phase:
 cargo tarpaulin --verbose --target-dir target/tarpaulin --workspace --exclude-files 'target/*' --ignore-panics --ignore-tests --out Xml --out Html --all-features -- --test-threads=1
 cargo test --features testing  -p keylime_push_model_agent --bin keylime_push_model_agent -- --nocapture
 
+Test execution with multiple tests:
+-----------------------------------
+cargo test -- --test-threads=16
+cargo test --features testing -- --test-threads=16
+
 Verifier certificate path:
 --------------------------
 /var/lib/keylime/cv_ca
