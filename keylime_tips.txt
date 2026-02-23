@@ -605,3 +605,9 @@ ERROR test/test_rpm_repo.py::RpmRepo_Test::test_analyze_rpm_pkg_url - AssertionE
 Prompt to let Claude what to check before committing:
 -----------------------------------------------------
 Can you please verify CI jobs are not broken (lints, mypy, pyright, tests and style-checks)? For linters, run tox -e "pylint,mypy,pyright". For style-checks, apply "pre-commit run" to appropriate files
+
+Installation of dependencies for documentation generation:
+----------------------------------------------------------
+git clone https://github.com/keylime/keylime
+cd keylime
+pip3 install -r docs/requirements.txt
