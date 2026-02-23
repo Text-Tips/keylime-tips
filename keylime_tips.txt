@@ -611,3 +611,5 @@ Installation of dependencies for documentation generation:
 git clone https://github.com/keylime/keylime
 cd keylime
 pip3 install -r docs/requirements.txt
+# Generation of documentation
+make -C docs html
