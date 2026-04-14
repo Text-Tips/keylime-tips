@@ -625,3 +625,58 @@ cd keylime
 pip3 install -r docs/requirements.txt
 # Generation of documentation
 make -C docs html
+
+Policy Creation:
+----------------
+1. Create a runtime policy
+
+Use the keylime-policy tool to generate one. For example:
+
+# From a filesystem scan
+keylime-policy create runtime --rootfs / --ramdisk-dir /boot -o policy.json
+
+# From an existing allowlist
+keylime-policy create runtime --allowlist allowlist.txt -o policy.json
+
+# From an RPM repository
+keylime-policy create runtime --remote-rpm-repo <url> -o policy.json
+
+You can also optionally sign the policy:
+keylime-policy sign runtime -r policy.json -k ec-key.pem -o signed-policy.json
+
+2. Upload the policy to the verifier
+
+keylime_tenant -c addruntimepolicy \
+  --runtime-policy-name my-policy \
+  --runtime-policy policy.json
+
+3. Add an agent referencing that policy
+
+For the push model specifically, you use the --push-model flag and reference the policy by name (no -t target host needed since the agent pushes to the verifier):
+
+keylime_tenant -c add --push-model -u <agent-uuid> \
+  --runtime-policy-name my-policy
+
+The same policy can be reused across multiple agents.
+
+Policy management commands
+
+You can also list, show, update, or delete policies:
+
+keylime_tenant -c listruntimepolicy
+keylime_tenant -c showruntimepolicy --runtime-policy-name my-policy
+keylime_tenant -c updateruntimepolicy --runtime-policy-name my-policy --runtime-policy updated.json
+keylime_tenant -c deleteruntimepolicy --runtime-policy-name my-policy
+
+Measured boot policies work the same way (--mb-policy / --mb-policy-name and addmbpolicy, listmbpolicy, etc.).
+
+Documentation pointers
+
+For more detail, check these docs in the keylime repo:
+- docs/user_guide/push_model.rst — push model setup
+- docs/user_guide/runtime_ima.rst — runtime IMA policy format and details
+- docs/user_guide/keylime_policy.rst — the keylime-policy tool usage
+- docs/man/keylime_tenant.1.rst — full tenant CLI reference
+
+---
+This covers the full workflow: generate a policy, upload it to the verifier, and then reference it when adding agents in push mode. Let me know if you'd like me to adjust the tone or level of detail for the Slack audience.
