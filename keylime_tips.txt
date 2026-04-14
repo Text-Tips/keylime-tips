@@ -602,6 +602,18 @@ ERROR test/test_rpm_repo.py::RpmRepo_Test::test_analyze_rpm_pkg - AssertionError
 ERROR test/test_rpm_repo.py::RpmRepo_Test::test_analyze_rpm_pkg_url - AssertionError: 77 != 0
 ============================================================================= 4 failed, 1155 passed, 2 skipped, 1 xfailed, 6 warnings, 4 errors in 8.21s =========================================
 
+Keylime Unit Tests that, normally, fail on Fedora-43:
+-----------------------------------------------------
+================================================================== short test summary info =============================================================================
+FAILED test/test_ca_impl_openssl.py::OpenSSL_Test::test_openssl - ValueError: key_size must be at least 1024-bits.
+FAILED test/test_ca_impl_openssl.py::OpenSSL_Test::test_openssl_crl_dist - ValueError: key_size must be at least 1024-bits.
+FAILED test/test_ca_impl_openssl.py::TestMkSignedCertWithSans::test_mk_signed_cert_fallback_to_name - ValueError: key_size must be at least 1024-bits.
+FAILED test/test_ca_impl_openssl.py::TestMkSignedCertWithSans::test_mk_signed_cert_with_dns_sans - ValueError: key_size must be at least 1024-bits.
+FAILED test/test_ca_impl_openssl.py::TestMkSignedCertWithSans::test_mk_signed_cert_with_ip_sans - ValueError: key_size must be at least 1024-bits.
+FAILED test/test_ca_util.py::CA_Util_Test::test_ca_util - AssertionError: key_size must be at least 1024-bits.
+FAILED test/test_config.py::TestConfig::test_cache_config - configparser.NoSectionError: No section: 'verifier'
+================================================= 7 failed, 1301 passed, 2 skipped, 1 xfailed, 26 warnings in 17.10s ===================================================
+
 Prompt to let Claude what to check before committing:
 -----------------------------------------------------
 Can you please verify CI jobs are not broken (lints, mypy, pyright, tests and style-checks)? For linters, run tox -e "pylint,mypy,pyright". For style-checks, apply "pre-commit run" to appropriate files
