@@ -707,4 +707,7 @@ The runtime policy file is a JSON document that defines which IMA measurements a
 keylime_create_policy -m /sys/kernel/security/ima/ascii_runtime_measurements -o /tmp/min_policy.json
 # How to apply it to a running agent
 sudo python3 -m keylime.cmd.tenant -c update -u d432fbb3-d2f1-4a97-9ef7-75bd81c00000 --runtime-policy /tmp/min_policy.json --push-mode
-sudo python3 -m keylime.cmd.tenant -c update -u d432fbb3-d2f1-4a97-9ef7-75bd81c00000 --runtime-policy /tmp/min_policy.json --runtime-policy-name "production-v1" --push-mode
+sudo python3 -m keylime.cmd.tenant -c update -u d432fbb3-d2f1-4a97-9ef7-75bd81c00000 --runtime-policy /tmp/min_policy.json --runtime-policy-name production-v1 --push-mode
+
+# How to apply it to a running agent
+sudo python3 -m keylime.cmd.tenant -c add -u d432fbb3-d2f1-4a97-9ef7-75bd81c00000 --runtime-policy /tmp/min_policy.json --runtime-policy-name "ima-00000" --mb-refstate /tmp/mb_refstate.json --push-mode
