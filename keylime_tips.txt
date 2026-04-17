@@ -680,3 +680,8 @@ For more detail, check these docs in the keylime repo:
 
 ---
 This covers the full workflow: generate a policy, upload it to the verifier, and then reference it when adding agents in push mode. Let me know if you'd like me to adjust the tone or level of detail for the Slack audience.
+
+
+Run agent with a particular UUID from cmdline:
+----------------------------------------------
+sudo sh -c 'KEYLIME_AGENT_UUID="a1b2c3d4-0000-1111-2222-333344445555" cargo run --bin keylime_push_model_agent'
