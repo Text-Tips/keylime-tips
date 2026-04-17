@@ -710,4 +710,15 @@ sudo python3 -m keylime.cmd.tenant -c update -u d432fbb3-d2f1-4a97-9ef7-75bd81c0
 sudo python3 -m keylime.cmd.tenant -c update -u d432fbb3-d2f1-4a97-9ef7-75bd81c00000 --runtime-policy /tmp/min_policy.json --runtime-policy-name production-v1 --push-mode
 
 # How to apply it to a running agent
-sudo python3 -m keylime.cmd.tenant -c add -u d432fbb3-d2f1-4a97-9ef7-75bd81c00000 --runtime-policy /tmp/min_policy.json --runtime-policy-name "ima-00000" --mb-refstate /tmp/mb_refstate.json --push-mode
+sudo python3 -c "
+  import argparse, json
+  from keylime.policy.create_mb_policy import create_mb_refstate
+  args = argparse.Namespace(
+      eventlog_file='/sys/kernel/security/tpm0/binary_bios_measurements',
+      output='/tmp/mb_refstate.json',
+      without_secureboot=True
+  )
+  create_mb_refstate(args)
+  print('Done')
+"
+sudo python3 -m keylime.cmd.tenant -c add -u a1b2c3d4-0000-1111-2222-333344445555 --runtime-policy /tmp/other_policy.json  --runtime-policy-name "ima-5555"  --mb-policy /tmp/mb_refstate.json --mb-policy-name "mb-5555" --push-mode
