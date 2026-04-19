@@ -722,3 +722,9 @@ sudo python3 -c "
   print('Done')
 "
 sudo python3 -m keylime.cmd.tenant -c add -u a1b2c3d4-0000-1111-2222-333344445555 --runtime-policy /tmp/other_policy.json  --runtime-policy-name "ima-5555"  --mb-policy /tmp/mb_refstate.json --mb-policy-name "mb-5555" --push-mode
+
+Compile from source:
+----------------------
+sudo pip3 install .
+# Then restart the verifier:
+sudo systemctl restart keylime_verifier
