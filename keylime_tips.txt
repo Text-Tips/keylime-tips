@@ -728,3 +728,32 @@ Compile from source:
 sudo pip3 install .
 # Then restart the verifier:
 sudo systemctl restart keylime_verifier
+
+Change keylime tests to post to a keylime-tests fork:
+-----------------------------------------------------
+diff --git a/packit-ci.fmf b/packit-ci.fmf
+index 8123b61..c69e5e4 100644
+--- a/packit-ci.fmf
++++ b/packit-ci.fmf
+@@ -52,8 +52,8 @@ adjust:
+
+   discover:
+     how: fmf
+-    url: https://github.com/RedHat-SP-Security/keylime-tests
+-    ref: main
++    url: https://github.com/sarroutbi/keylime-tests
++    ref: push-agent-timeout-status
+     test:
+      - /setup/apply_workarounds
+      - /setup/configure_tpm_emulator
+@@ -139,8 +139,8 @@ adjust:
+
+   discover:
+     how: fmf
+-    url: https://github.com/RedHat-SP-Security/keylime-tests
+-    ref: main
++    url: https://github.com/sarroutbi/keylime-tests
++    ref: push-agent-timeout-status
+     test:
+      - /setup/apply_workarounds
+      - /setup/configure_tpm_emulator
