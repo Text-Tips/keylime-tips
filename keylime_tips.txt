@@ -757,3 +757,7 @@ index 8123b61..c69e5e4 100644
      test:
       - /setup/apply_workarounds
       - /setup/configure_tpm_emulator
+
+Retest a particular packit task:
+--------------------------------
+/packit test --labels centos-stream-9-x86_64
